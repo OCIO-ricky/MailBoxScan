@@ -1,3 +1,6 @@
+We are initiating an effort to identify CDC staff who currently have a government-provided mobile device but may no longer need it. As part of this initiative, an agency-wide email will be sent asking recipients to confirm whether they still require their government-issued mobile phone. Respondents will be asked to reply using a specific subject line and indicate "Yes" or "No" in the body of the email.
+To streamline the collection and processing of these responses, we have developed a Python-based script that scans an Outlook mailbox for replies with the designated subject line, captures the sender’s name and email, and records those who respond with “No” in a structured .csv file.
+
 ## How to Set Up and Run the Script
 
 Clone the Repository: First, clone the project repository to your local machine:
