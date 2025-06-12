@@ -341,6 +341,9 @@ def main():
     """
     Main function to orchestrate the email scanning and data saving process.
     """
+    logging.info("======================================================================")
+    logging.info("                       SCRIPT RUN STARTED                             ")
+    logging.info("======================================================================")
     required_env_vars_map = {
         "EMAIL_ADDRESS": EMAIL_ADDRESS, "TENANT_ID": TENANT_ID,
         "CLIENT_ID": CLIENT_ID, "CLIENT_SECRET": CLIENT_SECRET,
@@ -368,7 +371,9 @@ def main():
     else:
         logging.error("OUTPUT_CSV_FILE is not defined in .env. Cannot save results.")
     
+    logging.info("----------------------------------------------------------------------")
     logging.info("Script finished.")
+    logging.info("----------------------------------------------------------------------\n")
 
 if __name__ == "__main__":
     main()
