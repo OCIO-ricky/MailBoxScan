@@ -30,7 +30,7 @@ Configure Environment Variables:
     *   `TARGET_SUBJECT` (Optional, Look for new emails with this subject line. Defaults to "Mobile Phone Usage Query")
     *   `SEARCH_QUESTION` (Optional, defaults to "Do you still need the use of this mobile phone?"): The exact question to find in email bodies.
     *   `OUTPUT_CSV_FILE` (Optional, defaults to "mobile_phone_survey_results.csv"): The name of the CSV file to be generated.
-    *   `PROCESSED_FOLDER_NAME` (Optional, defaults to "ProcessedSurveyEmails"): The name of the subfolder to move processed emails to.
+    *   `PROCESSED_FOLDER_NAME` (Optional, defaults to "ProcessedSurveyEmails"): The name of the mailbox's subfolder to move processed emails to.
 
 Install Dependencies: Open your terminal or command prompt, navigate to the project directory, and install the required Python packages:
 
@@ -44,7 +44,7 @@ Run the Script: Execute the Python script from your terminal:
 python email_scanner.py
 ```
 
-The script will print progress messages to the console. Once finished, you'll find a CSV file (e.g., **mobile_phone_survey_results.csv**, or whatever you named it in .env) in the same directory containing the extracted data.
+The script will print progress messages to the console. Once finished, you'll find a CSV file (e.g., /output/**mobile_phone_survey_results.csv**, or whatever you named it in .env) in the same directory containing the extracted data.
 
 ## Important Considerations
 
