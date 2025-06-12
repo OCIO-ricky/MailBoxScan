@@ -1,101 +1,62 @@
-# Outlook Email Survey Scanner
+We are initiating an effort to identify CDC staff who currently have a government-provided mobile device but may no longer need it. As part of this initiative, an agency-wide email will be sent asking recipients to confirm whether they still require their government-issued mobile phone. Respondents will be asked to reply using a specific subject line and indicate "Yes" or "No" in the body of the email.
+To streamline the collection and processing of these responses, we have developed a Python-based script that scans an Outlook mailbox for replies with the designated subject line, captures the sender’s name and email, and records those who respond with “No” in a structured .csv file.
 
-This Python script automates the process of scanning a specified Microsoft 365 Outlook mailbox for emails matching a particular subject. It extracts "Yes" or "No" answers to a defined question within the email body, records these responses in a CSV file, and moves processed emails to a designated subfolder in the mailbox.
+## How to Set Up and Run the Script
 
-## Features
+Clone the Repository: First, clone the project repository to your local machine:
 
--   **Targeted Email Scanning**: Searches for emails based on a specific subject line.
--   **Answer Extraction**: Parses email bodies to find a specific question and extracts a "Yes" or "No" answer immediately following it.
--   **CSV Reporting**:
-    -   Saves extracted sender information, date received, the answer, and a "Last Updated" timestamp to a CSV file.
-    -   Stores CSV files in an `output/` directory.
-    -   Updates existing records in the CSV if a newer email from the same sender provides a different answer.
-    -   Backs up the previous CSV file with a timestamp before writing changes.
--   **Email Management**: Moves emails processed (either new or updated) to a specified subfolder in Outlook.
--   **Comprehensive Logging**:
-    -   Logs script activity, informational messages, warnings, and errors to both the console and a log file (`logs/email_scanner.log`).
- -   **Configuration via `.env` file**: Manages sensitive credentials and settings securely.
+```bash
+git clone https://github.com/OCIO-ricky/MailBoxScan.git
+```
 
-## Prerequisites
+```bash
+cd MailBoxScan
+```
 
-**Microsoft Graph API Integration**: Uses the `O365` library to interact with Microsoft Graph API for modern and secure access to mailbox data.
-**OAuth 2.0 Authentication**: Employs client credentials flow (application authentication) for secure, unattended access.
+Create the Directory (Alternative): If not cloning, make a new folder for your project (e.g., outlook_scanner).
 
-1.  **Python**: Python 3.7+ is recommended.
-2.  **Microsoft 365 Account**: A mailbox to scan.
-3.  **Azure AD App Registration**:
-    -   An application registered in Azure Active Directory.
-    -   **Required API Permissions** (Microsoft Graph, Application type):
-        -   `Mail.Read`: To read emails from the mailbox.
-        -   `Mail.ReadWrite`: To move emails to a subfolder.
-    -   Admin consent granted for these permissions.
-    -   A Client ID and Client Secret generated for the application.
-    -   Your Azure AD Tenant ID.
-4.  **Python Libraries**:
-    -   `O365`
-    -   `python-dotenv`
-    (These can be installed via `pip`)
+Save the Files: If you haven't cloned the repository, ensure `email_scanner.py`, `requirements.txt`, and `.env.template` are in your project directory.
 
-## Setup
-
-1.  **Clone the Repository (if applicable)**:
+Configure Environment Variables:
+1.  **Copy the template:** In your project directory, make a copy of the `.env.template` file and rename it to `.env`.
     ```bash
-    git clone <repository-url>
-    cd MailBoxScan
+    cp .env.template .env
     ```
+2.  **Edit `.env`:** Open the newly created `.env` file with a text editor. You **must** fill in the following critical variables with your specific details:
+    *   `EMAIL_ADDRESS`: The target mailbox address to (e.g., `mobile_surveys@cdc.gov`).
+    *   `TENANT_ID`: Your Azure AD Tenant ID.
+    *   `CLIENT_ID`: The Application (client) ID of your Azure AD App Registration.
+    *   `CLIENT_SECRET`: The client secret value for your Azure AD App Registration.
+    *   `TARGET_SUBJECT` (Optional, Look for new emails with this subject line. Defaults to "Mobile Phone Usage Query")
+    *   `SEARCH_QUESTION` (Optional, defaults to "Do you still need the use of this mobile phone?"): The exact question to find in email bodies.
+    *   `OUTPUT_CSV_FILE` (Optional, defaults to "mobile_phone_survey_results.csv"): The name of the CSV file to be generated.
+    *   `PROCESSED_FOLDER_NAME` (Optional, defaults to "ProcessedSurveyEmails"): The name of the subfolder to move processed emails to.
 
-2.  **Install Dependencies**:
-    It's recommended to create a `requirements.txt` file:
-    ```text
-    # requirements.txt
-    O365
-    python-dotenv
-    ```
-    Then install using pip:
-    ```bash
-    pip install -r requirements.txt
-    ```
+Install Dependencies: Open your terminal or command prompt, navigate to the project directory, and install the required Python packages:
 
-3.  **Configure Environment Variables**:
-    -   Copy the `.env.template` file to a new file named `.env` in the root of the project:
-        ```bash
-        cp .env.template .env
-        ```
-    -   Edit the `.env` file and fill in your specific details for all the variables.
+```bash
+pip install -r requirements.txt
+```
 
-## Configuration (`.env` file)
-
-The `.env` file contains the following configuration variables:
-
--   `EMAIL_ADDRESS`: The email address of the target mailbox to scan (e.g., `survey@example.com`).
--   `TENANT_ID`: Your Azure AD Tenant ID.
--   `CLIENT_ID`: The Application (Client) ID of your Azure AD registered app.
--   `CLIENT_SECRET`: The Client Secret value for your Azure AD registered app.
--   `TARGET_SUBJECT`: The subject line (or a part of it) the script will look for in emails.
--   `SEARCH_QUESTION`: The exact question text the script will search for within the email body to find a "Yes/No" answer.
--   `OUTPUT_CSV_FILE`: The filename for the CSV report (e.g., `survey_results.csv`). This file will be stored in the `output/` directory.
--   `PROCESSED_FOLDER_NAME`: The name of the subfolder in the Outlook mailbox where emails with processed answers will be moved (e.g., `ProcessedSurveyResponses`).
-
-## Running the Script
-
-Once the setup and configuration are complete, you can run the script from the project's root directory:
+Run the Script: Execute the Python script from your terminal:
 
 ```bash
 python email_scanner.py
 ```
 
-## Output
+The script will print progress messages to the console. Once finished, you'll find a CSV file (e.g., **mobile_phone_survey_results.csv**, or whatever you named it in .env) in the same directory containing the extracted data.
 
-1.  **CSV File**:
-    -   Located in the `output/` directory (e.g., `output/mobile_phone_survey_results.csv`).
-    -   Contains columns: `Sender Name`, `Sender Email`, `Date Received`, `Answer`, `Last Updated`.
-    -   If changes are made to an existing CSV, the old version is backed up in the same `output/` directory with a timestamp appended to its name.
+## Important Considerations
 
-2.  **Log File**:
-    -   Located at `logs/email_scanner.log`.
-    -   Contains detailed logs of the script's execution, including informational messages, warnings, and errors.
-    -   New log entries are appended to this file on each run.
-    -   Console output also provides real-time logging.
-
-3.  **Processed Emails in Outlook**:
-    -   Emails from which an answer was successfully extracted and recorded (or updated) are moved to the subfolder specified by `PROCESSED_FOLDER_NAME` in the target Outlook mailbox.
+*   **Azure AD App Registration & Permissions:**
+    *   You must create an App Registration in Azure Active Directory.
+    *   The application needs the `IMAP.AccessAsApp` permission from **Microsoft Graph** (Application permission).
+    *   **Admin consent** must be granted for this permission in Azure AD.
+    *   A **client secret** must be generated for the app registration (this is your `CLIENT_SECRET`).
+    *   Note down the **Application (client) ID** (`CLIENT_ID`) and **Directory (tenant) ID** (`TENANT_ID`).
+*   **Mailbox Permissions for Service Principal:** The service principal associated with your Azure AD App Registration needs explicit permission (e.g., `FullAccess`) to the target mailbox (`EMAIL_ADDRESS`). This is typically done via Exchange Online PowerShell. Ask your IT support staff if you need assistance.
+*   **`.env` File Security:** The `.env` file contains sensitive credentials. The provided `.gitignore` file correctly excludes `.env` from being committed to version control. **Never commit your `.env` file.**
+*   **IMAP Server:** The script defaults to `outlook.office365.com`. This is standard for Microsoft 365, but verify if your environment uses a different server.
+*   **Email Folder:** The script defaults to searching the `INBOX`. If target emails are in a different folder (e.g., "Archive" or a custom folder), you'll need to modify the `mailbox.folder.set('YourSpecificFolderName')` line in `email_scanner.py`.
+*   **Answer Extraction Logic:** The `extract_answer` function uses a simple heuristic (looking for "Yes" or "No" within 100 characters after the question). This might need adjustment based on the exact format of your emails.
+* Dependencies: Ensure you have Python and pip installed to manage the packages listed in requirements.txt.
