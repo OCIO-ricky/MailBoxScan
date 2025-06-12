@@ -50,13 +50,14 @@ The script will print progress messages to the console. Once finished, you'll fi
 
 *   **Azure AD App Registration & Permissions:**
     *   You must create an App Registration in Azure Active Directory.
-    *   The application needs the `IMAP.AccessAsApp` permission from **Microsoft Graph** (Application permission).
+    *   The application needs `Mail.ReadWrite` permission from **Microsoft Graph** (Application permission). This allows the script to read emails from the target mailbox and move them to a processed folder. 
     *   **Admin consent** must be granted for this permission in Azure AD.
     *   A **client secret** must be generated for the app registration (this is your `CLIENT_SECRET`).
     *   Note down the **Application (client) ID** (`CLIENT_ID`) and **Directory (tenant) ID** (`TENANT_ID`).
-*   **Mailbox Permissions for Service Principal:** The service principal associated with your Azure AD App Registration needs explicit permission (e.g., `FullAccess`) to the target mailbox (`EMAIL_ADDRESS`). This is typically done via Exchange Online PowerShell. Ask your IT support staff if you need assistance.
+*   **Application Access Policy (Recommended for Scoped Access):**
+    *   With `Mail.ReadWrite` Application permission granted in Azure AD, the application can, by default, access all mailboxes in the organization.
+    *   The application's access should be restricted to **only** the specified target mailbox (`EMAIL_ADDRESS`) and adhere to the principle of least privilege, ask IT support to configure an Application Access Policy in Exchange Online.
 *   **`.env` File Security:** The `.env` file contains sensitive credentials. The provided `.gitignore` file correctly excludes `.env` from being committed to version control. **Never commit your `.env` file.**
-*   **IMAP Server:** The script defaults to `outlook.office365.com`. This is standard for Microsoft 365, but verify if your environment uses a different server.
-*   **Email Folder:** The script defaults to searching the `INBOX`. If target emails are in a different folder (e.g., "Archive" or a custom folder), you'll need to modify the `mailbox.folder.set('YourSpecificFolderName')` line in `email_scanner.py`.
+*   **Email Folder:** The script defaults to searching the `INBOX`. If target emails are in a different folder (e.g., "Archive" or a custom folder), ensure the script is configured to target that specific folder. The method for specifying this folder will depend on how the script interacts with the mailbox using the Microsoft Graph API (e.g., by using the folder's ID or well-known name).
 *   **Answer Extraction Logic:** The `extract_answer` function uses a simple heuristic (looking for "Yes" or "No" within 100 characters after the question). This might need adjustment based on the exact format of your emails.
 * Dependencies: Ensure you have Python and pip installed to manage the packages listed in requirements.txt.
