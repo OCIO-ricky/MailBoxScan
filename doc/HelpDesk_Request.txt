@@ -1,0 +1,15 @@
+I am writing to request the generation of necessary credentials for an automated email scanning script we are developing. 
+This script will be used to process incoming emails based on specific criteria and move the processed emails into a sub-folder 
+in the same mailbox.
+
+Application name:  mobile devices survey 
+Target Mailbox: mobilereponse@cdc,gov
+Please help us obtain the required credentials for an Azure AD Application Registration that will allow the script to authenticate to the target mailbox and using the client credentials flow.  
+Specifically, we need:
+1.	Tenant ID
+2.	Client ID (Application ID) 
+3.	Client Secret: 
+The application requires the following Application permissions (not Delegated):
+•	Mail.Read: To read emails from the specified mailbox.
+•	Mail.ReadWrite: To move emails to a sub-folder within the specified mailbox. 
+Please ensure these permissions are granted and have received admin consent for the application. The script uses https://graph.microsoft.com/.default scope, relying on pre-consented application permissions.
